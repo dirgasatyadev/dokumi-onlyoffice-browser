@@ -3,7 +3,7 @@ import globals from 'globals'
 
 export default [
   {
-    ignores: ['.cache/**', '.source-package/**', 'dist/**', 'node_modules/**'],
+    ignores: ['.cache/**', '.source-package/**', 'dist/**', 'node_modules/**', 'playwright-report/**', 'public/x2t/**', 'test-results/**'],
   },
   js.configs.recommended,
   {

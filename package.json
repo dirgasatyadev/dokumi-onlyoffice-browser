@@ -10,21 +10,28 @@
     "node": ">=24.0.0 <25"
   },
   "scripts": {
-    "build": "node scripts/build-runtime.mjs",
+    "build": "pnpm prepare:x2t && vite build && node scripts/build-runtime.mjs",
     "fetch:upstream": "node scripts/fetch-upstream.mjs",
+    "fetch:x2t": "node scripts/fetch-x2t.mjs",
     "generate:sbom": "node scripts/generate-sbom.mjs",
     "lint": "eslint .",
     "package:source": "node scripts/package-source.mjs",
+    "prepare:x2t": "node scripts/prepare-x2t.mjs",
     "test": "node --test tests/*.test.mjs",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.runtime.json",
+    "verify:artifacts": "node scripts/verify-artifacts.mjs",
     "verify:lock": "node scripts/verify-lock.mjs",
     "verify:upstream": "node scripts/verify-upstream.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
     "@types/node": "24.13.2",
     "eslint": "10.8.0",
+    "fflate": "0.8.3",
     "globals": "17.8.0",
-    "typescript": "6.0.2"
+    "typescript": "6.0.2",
+    "vite": "8.2.0"
   }
 }

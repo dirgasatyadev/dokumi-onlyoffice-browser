@@ -6,10 +6,10 @@ Public browser runtime for editing Dokumi template DOCX files with unmodified ON
 
 ## Status
 
-The repository is currently at the governance and reproducible-source baseline. It does **not** yet contain a working editor runtime. The implementation sequence is:
+The repository now contains the verified x2t Web Worker and DOCX/`Editor.bin` round-trip runtime. The full SDKJS editor shell is the next implementation stage. The sequence is:
 
 1. reproducible upstream fetch and verification;
-2. x2t WASM DOCX/`Editor.bin` round-trip;
+2. x2t WASM DOCX/`Editor.bin` round-trip (complete);
 3. local DocService adapter;
 4. IndexedDB recovery;
 5. strict parent/iframe bridge;
@@ -36,6 +36,14 @@ pnpm fetch:upstream
 pnpm verify:upstream
 ```
 
+The browser build also fetches the pinned x2t release artifact and verifies the archive plus both extracted files against `artifacts.lock.json`:
+
+```bash
+pnpm fetch:x2t
+pnpm verify:artifacts
+pnpm build
+```
+
 The complete source package is intentionally large because it contains the exact upstream source archives:
 
 ```bash
@@ -52,11 +60,13 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm exec playwright install chromium
+pnpm test:e2e --project=chromium
 pnpm generate:sbom
 pnpm verify:lock
 ```
 
-See [docs/building.md](docs/building.md), [docs/licensing.md](docs/licensing.md), and [docs/release-process.md](docs/release-process.md).
+See [docs/building.md](docs/building.md), [docs/x2t-testing.md](docs/x2t-testing.md), [docs/licensing.md](docs/licensing.md), and [docs/release-process.md](docs/release-process.md).
 
 ## Security
 

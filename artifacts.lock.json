@@ -1,0 +1,28 @@
+{
+  "$schema": "./contracts/artifacts-lock.schema.json",
+  "lockVersion": 1,
+  "artifacts": [
+    {
+      "name": "onlyoffice-x2t-wasm-v9.3.0",
+      "sourceRepository": "https://github.com/cryptpad/onlyoffice-x2t-wasm.git",
+      "sourceCommit": "96886ff143e05471144c4426fb304b4d794370d2",
+      "releaseTag": "v9.3.0+0",
+      "downloadUrl": "https://github.com/cryptpad/onlyoffice-x2t-wasm/releases/download/v9.3.0%2B0/x2t.zip",
+      "archiveFile": "x2t-v9.3.0+0.zip",
+      "archiveBytes": 16555954,
+      "sha256": "c209894d10d96fe1c4912e21fe518dca1bcdc0b4bc40778b4e6886e7227ef001",
+      "files": [
+        {
+          "path": "x2t.js",
+          "bytes": 135941,
+          "sha256": "e37c43699e6f9c1054b9e9a7e5b9b38b2f8b53ad2b48a6b369b78710e75af208"
+        },
+        {
+          "path": "x2t.wasm",
+          "bytes": 35985703,
+          "sha256": "e166c252adbd603e5e3abf65cf3b37bf0424a33edd9ae1b4b791176ce7fd2caa"
+        }
+      ]
+    }
+  ]
+}

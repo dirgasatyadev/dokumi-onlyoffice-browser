@@ -20,7 +20,16 @@ pnpm build
 pnpm generate:sbom
 ```
 
-`pnpm build` currently emits only a governance scaffold manifest. `pnpm generate:sbom` emits a CycloneDX 1.6 inventory for application dependencies and locked upstream sources. A functional editor build is intentionally deferred until the x2t round-trip ticket.
+`pnpm build` verifies and prepares the pinned x2t browser files, builds the Web Worker application, and emits a release manifest. `pnpm generate:sbom` emits a CycloneDX 1.6 inventory for application dependencies and locked upstream sources. See [x2t-testing.md](x2t-testing.md) for the browser round-trip gate.
+
+## x2t release artifact
+
+```bash
+pnpm fetch:x2t
+pnpm verify:artifacts
+```
+
+The archive and extracted `x2t.js`/`x2t.wasm` files must match exact byte lengths and SHA-256 values in `artifacts.lock.json`. Cached and public copies are excluded from Git.
 
 ## Upstream source
 

@@ -2,8 +2,10 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { repositoryRoot } from './upstream.mjs'
 import { verifyLock } from './verify-lock.mjs'
+import { validateArtifactsLock } from './verify-artifacts.mjs'
 
 const lock = await verifyLock()
+const artifactLock = await validateArtifactsLock()
 const packageJson = JSON.parse(await readFile(join(repositoryRoot, 'package.json'), 'utf8'))
 const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies }
 const outputDirectory = join(repositoryRoot, 'dist')
@@ -25,6 +27,17 @@ const components = [
     externalReferences: [
       { type: 'vcs', url: source.repository },
       { type: 'distribution', url: source.archiveUrl },
+    ],
+  })),
+  ...artifactLock.artifacts.map((artifact) => ({
+    type: 'file',
+    name: artifact.name,
+    version: artifact.releaseTag,
+    hashes: [{ alg: 'SHA-256', content: artifact.sha256 }],
+    licenses: [{ license: { id: 'AGPL-3.0-only' } }],
+    externalReferences: [
+      { type: 'vcs', url: `${artifact.sourceRepository}#${artifact.sourceCommit}` },
+      { type: 'distribution', url: artifact.downloadUrl },
     ],
   })),
 ]

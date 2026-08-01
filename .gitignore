@@ -83,6 +83,10 @@ out
 dist
 .output
 .source-package
+public/x2t/x2t.js
+public/x2t/x2t.wasm
+test-results
+playwright-report
 
 # Gatsby files
 .cache/
