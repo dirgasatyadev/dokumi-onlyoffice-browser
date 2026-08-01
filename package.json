@@ -1,0 +1,29 @@
+{
+  "name": "dokumi-onlyoffice-browser",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public AGPL browser runtime for Dokumi using ONLYOFFICE and x2t WebAssembly",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "build": "node scripts/build-runtime.mjs",
+    "fetch:upstream": "node scripts/fetch-upstream.mjs",
+    "lint": "eslint .",
+    "package:source": "node scripts/package-source.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "verify:lock": "node scripts/verify-lock.mjs",
+    "verify:upstream": "node scripts/verify-upstream.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.2",
+    "eslint": "10.8.0",
+    "globals": "17.8.0",
+    "typescript": "6.0.2"
+  }
+}
