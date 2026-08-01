@@ -1,5 +1,7 @@
-import { mkdir, rename, rm, writeFile } from 'node:fs/promises'
-import { spawn } from 'node:child_process'
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
+
+import { unzipSync } from 'fflate'
 
 import {
   artifactArchivePath,
@@ -10,15 +12,18 @@ import {
 } from './artifacts.mjs'
 import { verifyArtifacts } from './verify-artifacts.mjs'
 
-/** @param {string} archive @param {string} destination */
-async function extractZip(archive, destination) {
+/** @param {string} archive @param {string} destination @param {import('./artifacts.mjs').ArtifactFile[]} files */
+async function extractZip(archive, destination, files) {
   await rm(destination, { force: true, recursive: true })
   await mkdir(destination, { recursive: true })
-  await new Promise((resolve, reject) => {
-    const child = spawn('tar', ['-xf', archive, '-C', destination], { stdio: 'inherit' })
-    child.once('error', reject)
-    child.once('exit', (code) => code === 0 ? resolve(undefined) : reject(new Error(`tar exited with code ${code}`)))
-  })
+  const entries = unzipSync(new Uint8Array(await readFile(archive)))
+  for (const file of files) {
+    const data = entries[file.path]
+    if (!data) throw new Error(`${archive}: missing locked entry ${file.path}`)
+    const output = join(destination, file.path)
+    await mkdir(dirname(output), { recursive: true })
+    await writeFile(output, data, { flag: 'wx' })
+  }
 }
 
 /** @param {string} url @param {string} destination */
@@ -49,7 +54,7 @@ for (const artifact of lock.artifacts) {
     await verifyFile(archive, artifact.archiveBytes, artifact.sha256)
   }
   const destination = artifactExtractDirectory(artifact)
-  await extractZip(archive, destination)
+  await extractZip(archive, destination, artifact.files)
 }
 
 await verifyArtifacts()
