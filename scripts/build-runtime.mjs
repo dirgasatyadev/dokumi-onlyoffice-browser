@@ -10,6 +10,7 @@ await mkdir(outputDirectory, { recursive: true })
 await writeFile(join(outputDirectory, 'release-manifest.json'), `${JSON.stringify({
   artifactType: 'governance-scaffold',
   package: packageJson.name,
+  sbom: 'sbom.cdx.json',
   upstream: lock.sources.map(({ name, commit, sha256 }) => ({ name, commit, sha256 })),
   version: packageJson.version,
 }, null, 2)}\n`)

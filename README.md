@@ -52,6 +52,7 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm generate:sbom
 pnpm verify:lock
 ```
 

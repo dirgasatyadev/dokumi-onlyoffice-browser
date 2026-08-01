@@ -17,9 +17,10 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm generate:sbom
 ```
 
-`pnpm build` currently emits only a governance scaffold manifest. A functional editor build is intentionally deferred until the x2t round-trip ticket.
+`pnpm build` currently emits only a governance scaffold manifest. `pnpm generate:sbom` emits a CycloneDX 1.6 inventory for application dependencies and locked upstream sources. A functional editor build is intentionally deferred until the x2t round-trip ticket.
 
 ## Upstream source
 
