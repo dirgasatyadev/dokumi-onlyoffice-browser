@@ -51,8 +51,8 @@ export class X2tClient {
   #nextId = 1
 
   constructor(options: X2tClientOptions = {}) {
-    this.#jsUrl = options.jsUrl ?? '/x2t/x2t.js'
-    this.#wasmUrl = options.wasmUrl ?? '/x2t/x2t.wasm'
+    this.#jsUrl = options.jsUrl ?? '/releases/0.1.0/x2t/x2t.js'
+    this.#wasmUrl = options.wasmUrl ?? '/releases/0.1.0/x2t/x2t.wasm'
     this.#timeoutMs = options.timeoutMs ?? 120_000
     this.#worker = options.workerFactory?.() ?? new Worker(new URL('./x2t.worker.ts', import.meta.url))
     this.#worker.onmessage = ({ data }: MessageEvent<X2tWorkerResponse>) => this.#receive(data)

@@ -20,7 +20,7 @@ pnpm build
 pnpm generate:sbom
 ```
 
-`pnpm build` verifies and prepares the pinned x2t browser files, builds the Web Worker application, and emits a release manifest. `pnpm generate:sbom` emits a CycloneDX 1.6 inventory for application dependencies and locked upstream sources. See [x2t-testing.md](x2t-testing.md) for the browser round-trip gate.
+`pnpm build` verifies and prepares the pinned x2t and ONLYOFFICE editor files under immutable `/releases/0.1.0/` paths, builds the application, and emits a release manifest. `pnpm generate:sbom` emits a CycloneDX 1.6 inventory for application dependencies, locked upstream sources, x2t, and the editor distribution. See [x2t-testing.md](x2t-testing.md) for the browser round-trip gate.
 
 ## x2t release artifact
 
@@ -30,6 +30,16 @@ pnpm verify:artifacts
 ```
 
 The archive and extracted `x2t.js`/`x2t.wasm` files must match exact byte lengths and SHA-256 values in `artifacts.lock.json`. Cached and public copies are excluded from Git.
+
+## Editor distribution and source
+
+```bash
+pnpm fetch:editor
+pnpm fetch:editor-source
+pnpm verify:editor
+```
+
+`editor.lock.json` binds the public CryptPad editor release ZIP to its immutable source commit and separately checksums the corresponding-source tarball. The runtime copies the distribution without patching SDKJS or Web Apps; the only generated addition is a scope-relative copy of the distribution's canonical service worker.
 
 ## Upstream source
 
@@ -48,4 +58,4 @@ Commit all intended source first, then run:
 pnpm package:source
 ```
 
-Packaging fails on a dirty worktree. The output under `dist/source/` contains the repository at `HEAD`, exact upstream archives, a source manifest, and a sibling SHA-256 file.
+Packaging fails on a dirty worktree. The output under `dist/source/` contains the repository at `HEAD`, exact upstream archives (including the editor corresponding source), a source manifest, and a sibling SHA-256 file.

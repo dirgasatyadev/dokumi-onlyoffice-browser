@@ -10,17 +10,21 @@
     "node": ">=24.0.0 <25"
   },
   "scripts": {
-    "build": "pnpm prepare:x2t && vite build && node scripts/build-runtime.mjs",
+    "build": "pnpm prepare:x2t && pnpm prepare:editor && vite build && node scripts/build-runtime.mjs",
     "fetch:upstream": "node scripts/fetch-upstream.mjs",
+    "fetch:editor": "node scripts/fetch-editor.mjs",
+    "fetch:editor-source": "node scripts/fetch-editor-source.mjs",
     "fetch:x2t": "node scripts/fetch-x2t.mjs",
     "generate:sbom": "node scripts/generate-sbom.mjs",
     "lint": "eslint .",
     "package:source": "node scripts/package-source.mjs",
     "prepare:x2t": "node scripts/prepare-x2t.mjs",
+    "prepare:editor": "node scripts/prepare-editor.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.runtime.json",
     "verify:artifacts": "node scripts/verify-artifacts.mjs",
+    "verify:editor": "node scripts/verify-editor.mjs",
     "verify:lock": "node scripts/verify-lock.mjs",
     "verify:upstream": "node scripts/verify-upstream.mjs"
   },
@@ -32,6 +36,7 @@
     "fflate": "0.8.3",
     "globals": "17.8.0",
     "typescript": "6.0.2",
-    "vite": "8.2.0"
+    "vite": "8.2.0",
+    "wrangler": "4.118.0"
   }
 }
