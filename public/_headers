@@ -13,7 +13,7 @@
   Cache-Control: no-cache, no-store, must-revalidate
 
 /releases/0.1.0/onlyoffice/*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self' https://creator.dokumi.id https://app.dokumi.id; object-src 'none'; base-uri 'self'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' blob:; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self' https://creator.dokumi.id https://app.dokumi.id; object-src 'none'; base-uri 'self'; form-action 'none'
 
 /releases/*
   Cache-Control: public, max-age=31536000, immutable
