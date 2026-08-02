@@ -10,7 +10,8 @@ const pixel = Uint8Array.from(Buffer.from(
   'base64',
 ))
 
-export function createGoldenDocx(media = pixel) {
+export function createGoldenDocx(media = pixel, marker = 'GOLDEN_BASE') {
+  const safeMarker = marker.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
   return zipSync({
     '[Content_Types].xml': xml(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
       <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -49,7 +50,7 @@ export function createGoldenDocx(media = pixel) {
         xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
         xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
         <w:body>
-          <w:p><w:r><w:t>Halo {{nama_lengkap}} — 東京, Ελληνικά, emoji 😀</w:t></w:r></w:p>
+          <w:p><w:r><w:t>Halo {{nama_lengkap}} — 東京, Ελληνικά, emoji 😀 — ${safeMarker}</w:t></w:r></w:p>
           <w:tbl><w:tblPr/><w:tblGrid><w:gridCol w:w="4000"/><w:gridCol w:w="4000"/></w:tblGrid>
             <w:tr><w:tc><w:p><w:r><w:t>Kolom A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>Nilai 42</w:t></w:r></w:p></w:tc></w:tr>
           </w:tbl>
@@ -66,6 +67,16 @@ export function createGoldenDocx(media = pixel) {
         </w:body>
       </w:document>`),
   }, { level: 6 })
+}
+
+export function createGoldenCorpus() {
+  const markers = [
+    'GOLDEN_01_BASIC', 'GOLDEN_02_UNICODE', 'GOLDEN_03_EMOJI', 'GOLDEN_04_PLACEHOLDER', 'GOLDEN_05_TABLE',
+    'GOLDEN_06_HEADER', 'GOLDEN_07_FOOTER', 'GOLDEN_08_IMAGE', 'GOLDEN_09_DATE', 'GOLDEN_10_NUMBER',
+    'GOLDEN_11_BOOLEAN', 'GOLDEN_12_SELECT', 'GOLDEN_13_LONG_TEXT', 'GOLDEN_14_MULTILINGUAL', 'GOLDEN_15_RTL',
+    'GOLDEN_16_CJK', 'GOLDEN_17_ACCENTS', 'GOLDEN_18_SYMBOLS', 'GOLDEN_19_RECOVERY', 'GOLDEN_20_REVISION',
+  ]
+  return markers.map((marker) => ({ marker, name: `${marker.toLowerCase()}.docx`, source: createGoldenDocx(pixel, marker) }))
 }
 
 export function createNearLimitDocx() {
