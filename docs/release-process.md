@@ -1,7 +1,7 @@
 # Release process
 
 1. Confirm the worktree is clean and CI is green.
-2. Run `pnpm fetch:upstream` and `pnpm verify:upstream`.
+2. Run `pnpm fetch:upstream`, `pnpm fetch:editor-source`, `pnpm verify:upstream`, and `pnpm verify:editor`.
 3. Run lint, typecheck, tests, browser tests, and the production build applicable to the release.
 4. Generate `pnpm generate:sbom` and `pnpm package:source`.
 5. Record runtime artifact, SBOM, and source archive SHA-256 values in the release manifest.

@@ -83,6 +83,11 @@ out
 dist
 .output
 .source-package
+public/x2t/x2t.js
+public/x2t/x2t.wasm
+public/releases/
+test-results
+playwright-report
 
 # Gatsby files
 .cache/
@@ -142,3 +147,4 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+.wrangler/

@@ -1,0 +1,27 @@
+interface AssetsBinding {
+  fetch(request: Request): Promise<Response>
+}
+
+interface Environment {
+  ASSETS: AssetsBinding
+}
+
+const wasmPath = '/releases/0.1.0/x2t/x2t.wasm'
+
+export default {
+  async fetch(request: Request, environment: Environment) {
+    const url = new URL(request.url)
+    if (url.pathname !== wasmPath) return environment.ASSETS.fetch(request)
+    url.pathname = `${wasmPath}.br`
+    const compressed = await environment.ASSETS.fetch(new Request(url, request))
+    if (!compressed.ok || !compressed.body) return new Response('Pinned x2t WASM asset is unavailable', { status: 503 })
+    const headers = new Headers(compressed.headers)
+    headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+    headers.set('Content-Encoding', 'br')
+    headers.set('Content-Type', 'application/wasm')
+    headers.set('Cross-Origin-Resource-Policy', 'same-site')
+    headers.set('Vary', 'Accept-Encoding')
+    headers.set('X-Content-Type-Options', 'nosniff')
+    return new Response(compressed.body, { headers, status: compressed.status })
+  },
+}

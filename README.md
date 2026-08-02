@@ -6,14 +6,15 @@ Public browser runtime for editing Dokumi template DOCX files with unmodified ON
 
 ## Status
 
-The repository is currently at the governance and reproducible-source baseline. It does **not** yet contain a working editor runtime. The implementation sequence is:
+The MVP now contains the pinned public editor distribution, local single-participant DocService adapter, strict parent/iframe bridge, IndexedDB recovery, browser-side DOCX export, and optimistic revision upload through a narrow editor token. A save is acknowledged only after create-session, direct object upload, and atomic revision completion succeed. It does not require ONLYOFFICE Document Server for an editing session.
 
 1. reproducible upstream fetch and verification;
-2. x2t WASM DOCX/`Editor.bin` round-trip;
-3. local DocService adapter;
-4. IndexedDB recovery;
-5. strict parent/iframe bridge;
-6. static deployment and release source package.
+2. x2t WASM DOCX/`Editor.bin` round-trip (complete);
+3. local DocService adapter (complete);
+4. IndexedDB recovery (complete);
+5. strict parent/iframe bridge (complete);
+6. versioned static deployment and corresponding-source release pipeline (complete).
+7. direct revision save, token refresh support, conflict preservation, and 20-document golden-corpus gate (complete).
 
 ## Licensing and attribution
 
@@ -36,6 +37,22 @@ pnpm fetch:upstream
 pnpm verify:upstream
 ```
 
+The browser build also fetches the pinned x2t release artifact and verifies the archive plus both extracted files against `artifacts.lock.json`:
+
+```bash
+pnpm fetch:x2t
+pnpm verify:artifacts
+pnpm build
+```
+
+The editor ZIP and its exact corresponding-source archive are independently pinned in `editor.lock.json`:
+
+```bash
+pnpm fetch:editor
+pnpm fetch:editor-source
+pnpm verify:editor
+```
+
 The complete source package is intentionally large because it contains the exact upstream source archives:
 
 ```bash
@@ -52,11 +69,13 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm exec playwright install chromium
+pnpm test:e2e --project=chromium
 pnpm generate:sbom
 pnpm verify:lock
 ```
 
-See [docs/building.md](docs/building.md), [docs/licensing.md](docs/licensing.md), and [docs/release-process.md](docs/release-process.md).
+See [docs/building.md](docs/building.md), [docs/x2t-testing.md](docs/x2t-testing.md), [docs/licensing.md](docs/licensing.md), and [docs/release-process.md](docs/release-process.md).
 
 ## Security
 
