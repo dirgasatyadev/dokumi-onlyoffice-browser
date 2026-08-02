@@ -34,6 +34,7 @@ export interface EditorDocumentManifest {
 }
 
 export interface EditorSessionManifest {
+  apiOrigin: string
   document: EditorDocumentManifest
   editorOrigin: string
   editorUrl: string
@@ -89,15 +90,20 @@ function emptyPayload(payload: Record<string, unknown>) {
   return exactKeys(payload, [])
 }
 
+function secureApiOrigin(url: URL) {
+  return url.protocol === 'https:' || (url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))
+}
+
 function validManifest(value: unknown): value is EditorSessionManifest {
-  if (!record(value) || !exactKeys(value, ['document', 'editorOrigin', 'editorUrl', 'expiresAt', 'sessionId', 'token']) || !record(value.document)) return false
+  if (!record(value) || !exactKeys(value, ['apiOrigin', 'document', 'editorOrigin', 'editorUrl', 'expiresAt', 'sessionId', 'token']) || !record(value.document)) return false
   const document = value.document
   if (!exactKeys(document, ['checksumSha256', 'contentLength', 'contentType', 'downloadUrl', 'fileId', 'fileName', 'sourceRevision'])) return false
   try {
     const editorOrigin = new URL(String(value.editorOrigin))
     const editorUrl = new URL(String(value.editorUrl))
+    const apiOrigin = new URL(String(value.apiOrigin))
     const downloadUrl = new URL(String(document.downloadUrl))
-    return editorOrigin.origin === value.editorOrigin && editorUrl.origin === editorOrigin.origin && downloadUrl.protocol === 'https:' &&
+    return apiOrigin.origin === value.apiOrigin && secureApiOrigin(apiOrigin) && editorOrigin.origin === value.editorOrigin && editorUrl.origin === editorOrigin.origin && downloadUrl.protocol === 'https:' &&
       uuidPattern.test(String(value.sessionId)) && uuidPattern.test(String(document.fileId)) && typeof value.token === 'string' && value.token.length > 0 &&
       Date.parse(String(value.expiresAt)) > Date.now() && document.contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' &&
       typeof document.fileName === 'string' && document.fileName.toLowerCase().endsWith('.docx') && Number.isSafeInteger(document.contentLength) && Number(document.contentLength) > 0 && Number(document.contentLength) <= 50 * 1024 * 1024 &&

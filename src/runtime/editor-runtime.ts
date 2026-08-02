@@ -5,6 +5,7 @@ import { X2tClient } from '../wasm/x2t-client'
 import type { X2tMediaFile } from '../wasm/types'
 import { EditorHost } from './editor-host'
 import { LocalDocService } from './local-doc-service'
+import { RevisionClient, RevisionConflictError, RevisionUploadError } from './revision-client'
 
 const engineVersion = '0.1.0+onlyoffice-9.3.0.140+x2t-9.3.0'
 const docxMime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -39,6 +40,7 @@ export class EditorRuntime {
   #maxSave?: ReturnType<typeof setTimeout>
   #saving?: Promise<ArrayBuffer>
   #session?: ActiveSession
+  #revisionClient?: RevisionClient
 
   constructor(options: { container: HTMLElement; parentOrigin: string; parentWindow?: Window; sessionId: string }) {
     this.#container = options.container
@@ -72,6 +74,7 @@ export class EditorRuntime {
       throw new Error('Editor manifest origin does not match this runtime')
     }
     this.#session = { manifest, sessionId: message.sessionId, templateId, userId }
+    this.#revisionClient = new RevisionClient(manifest, templateId)
     this.#channel.send('DOKUMI_EDITOR_LOADING', { stage: 'recovery' }, message.requestId)
     await this.#recovery.cleanup()
     const recovered = await this.#recovery.load(this.#session)
@@ -124,7 +127,10 @@ export class EditorRuntime {
             await this.#initialize(message)
             break
           case 'DOKUMI_EDITOR_REFRESH_TOKEN':
-            if (this.#session) this.#session.manifest = { ...this.#session.manifest, expiresAt: message.payload.expiresAt, token: message.payload.token }
+            if (this.#session) {
+              this.#session.manifest = { ...this.#session.manifest, expiresAt: message.payload.expiresAt, token: message.payload.token }
+              this.#revisionClient?.refreshToken(message.payload.token)
+            }
             break
           case 'DOKUMI_EDITOR_SAVE_NOW':
             await this.#save(false, message.requestId)
@@ -138,8 +144,16 @@ export class EditorRuntime {
             break
         }
       } catch (error) {
+        if (error instanceof RevisionConflictError) {
+          clearTimeout(this.#idleSave)
+          clearTimeout(this.#maxSave)
+          this.#idleSave = undefined
+          this.#maxSave = undefined
+          this.#channel.send('DOKUMI_EDITOR_CONFLICT', { actualRevision: error.actualRevision, expectedRevision: error.expectedRevision }, message.requestId)
+          return
+        }
         this.#channel.send('DOKUMI_EDITOR_ERROR', {
-          code: error instanceof Error && error.name === 'RecoveryQuotaError' ? 'RECOVERY_QUOTA_EXCEEDED' : 'RUNTIME_ERROR',
+          code: error instanceof RevisionUploadError ? error.code : error instanceof Error && error.name === 'RecoveryQuotaError' ? 'RECOVERY_QUOTA_EXCEEDED' : 'RUNTIME_ERROR',
           message: error instanceof Error ? error.message : String(error),
           recoverable: Boolean(this.#session),
         }, message.requestId)
@@ -156,7 +170,7 @@ export class EditorRuntime {
   }
 
   async #performSave(downloadOnly: boolean, requestId?: string) {
-    if (!this.#session || !this.#host || !this.#docService) throw new Error('Editor session is not open')
+    if (!this.#session || !this.#host || !this.#docService || !this.#revisionClient) throw new Error('Editor session is not open')
     this.#channel.send('DOKUMI_EDITOR_SAVING', { local: true }, requestId)
     const editorBin = this.#host.captureEditorBin()
     const media = this.#docService.listMedia()
@@ -179,12 +193,26 @@ export class EditorRuntime {
     const exported = await this.#x2t.exportDocx(editorBin, media)
     const checksumSha256 = await sha256(exported.docx)
     await this.#recovery.save({ ...snapshot, docx: exported.docx.slice(0), updatedAt: Date.now() })
+    if (downloadOnly) return exported.docx
+    this.#channel.send('DOKUMI_EDITOR_SAVING', { local: false }, requestId)
+    const saved = await this.#revisionClient.save(exported.docx, checksumSha256, snapshot.baseRevision)
+    this.#session.manifest = {
+      ...this.#session.manifest,
+      document: {
+        ...this.#session.manifest.document,
+        checksumSha256,
+        contentLength: saved.contentLength,
+        fileId: saved.fileId,
+        sourceRevision: saved.sourceRevision,
+      },
+    }
+    await this.#recovery.markSynced(this.#session, saved.sourceRevision, checksumSha256)
     clearTimeout(this.#idleSave)
     clearTimeout(this.#maxSave)
     this.#idleSave = undefined
     this.#maxSave = undefined
     this.#dirty = false
-    if (!downloadOnly) this.#channel.send('DOKUMI_EDITOR_SAVED', { checksumSha256, sourceRevision: snapshot.baseRevision }, requestId)
+    this.#channel.send('DOKUMI_EDITOR_SAVED', { checksumSha256, sourceRevision: saved.sourceRevision }, requestId)
     return exported.docx
   }
 }

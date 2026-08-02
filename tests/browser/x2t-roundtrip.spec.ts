@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { unzipSync } from 'fflate'
 
-import { createGoldenDocx, createNearLimitDocx } from './fixture'
+import { createGoldenCorpus, createGoldenDocx, createNearLimitDocx } from './fixture'
 
 interface RoundTripResult {
   editorBinBytes: number
@@ -95,6 +95,44 @@ test('round-trips representative DOCX through Editor.bin in a worker', async ({ 
     openWasmMemoryBytes: result.openWasmMemoryBytes,
     outputDocxBytes: Buffer.from(result.outputBase64, 'base64').byteLength,
   }))
+})
+
+test('round-trips the 20-document MVP golden corpus without data loss', async ({ browserName, page }) => {
+  test.skip(browserName !== 'chromium', 'The full golden corpus gate runs once in Chromium')
+  test.setTimeout(300_000)
+  const corpus = createGoldenCorpus()
+  expect(corpus).toHaveLength(20)
+  await page.goto('/?x2t-test=1')
+  const results = await page.evaluate(async (documents) => {
+    const X2tClient = Reflect.get(window, '__DokumiX2tClient')
+    const decode = (value: string) => Uint8Array.from(atob(value), (character) => character.charCodeAt(0)).buffer
+    const encode = (value: ArrayBuffer) => {
+      const bytes = new Uint8Array(value)
+      let binary = ''
+      for (let index = 0; index < bytes.length; index += 0x8000) binary += String.fromCharCode(...bytes.subarray(index, index + 0x8000))
+      return btoa(binary)
+    }
+    const client = new X2tClient({ timeoutMs: 180_000 })
+    try {
+      const output = []
+      for (const document of documents) {
+        const opened = await client.openDocx(decode(document.sourceBase64))
+        const exported = await client.exportDocx(opened.editorBin, opened.media)
+        output.push({ cleanupVerified: opened.cleanupVerified && exported.cleanupVerified, marker: document.marker, outputBase64: encode(exported.docx) })
+      }
+      return output
+    } finally {
+      client.dispose()
+    }
+  }, corpus.map((document) => ({ marker: document.marker, sourceBase64: Buffer.from(document.source).toString('base64') })))
+  expect(results).toHaveLength(20)
+  for (const result of results) {
+    expect(result.cleanupVerified).toBe(true)
+    const output = unzipSync(Uint8Array.from(Buffer.from(result.outputBase64, 'base64')))
+    const xml = new TextDecoder().decode(output['word/document.xml'])
+    expect(xml).toContain(result.marker)
+    expect(xml).toContain('{{nama_lengkap}}')
+  }
 })
 
 test('round-trips a DOCX near the 50 MiB boundary and records memory', async ({ browserName, page }) => {

@@ -6,7 +6,7 @@ Public browser runtime for editing Dokumi template DOCX files with unmodified ON
 
 ## Status
 
-The MVP now contains the pinned public editor distribution, local single-participant DocService adapter, strict parent/iframe bridge, IndexedDB recovery, and browser-side DOCX export. It does not require ONLYOFFICE Document Server for an editing session.
+The MVP now contains the pinned public editor distribution, local single-participant DocService adapter, strict parent/iframe bridge, IndexedDB recovery, browser-side DOCX export, and optimistic revision upload through a narrow editor token. A save is acknowledged only after create-session, direct object upload, and atomic revision completion succeed. It does not require ONLYOFFICE Document Server for an editing session.
 
 1. reproducible upstream fetch and verification;
 2. x2t WASM DOCX/`Editor.bin` round-trip (complete);
@@ -14,6 +14,7 @@ The MVP now contains the pinned public editor distribution, local single-partici
 4. IndexedDB recovery (complete);
 5. strict parent/iframe bridge (complete);
 6. versioned static deployment and corresponding-source release pipeline (complete).
+7. direct revision save, token refresh support, conflict preservation, and 20-document golden-corpus gate (complete).
 
 ## Licensing and attribution
 

@@ -75,10 +75,10 @@ export class RecoveryStore {
     await transactionComplete(transaction)
   }
 
-  async markSynced(identity: RecoveryIdentity, baseRevision: number) {
+  async markSynced(identity: RecoveryIdentity, baseRevision: number, sourceChecksumSha256: string) {
     const snapshot = await this.load(identity)
     if (!snapshot) return false
-    await this.save({ ...snapshot, baseRevision, pendingUpload: false, synced: true, updatedAt: Date.now() })
+    await this.save({ ...snapshot, baseRevision, pendingUpload: false, sourceChecksumSha256, synced: true, updatedAt: Date.now() })
     return true
   }
 
