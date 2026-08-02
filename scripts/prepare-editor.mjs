@@ -13,7 +13,9 @@ try {
 }
 
 const { artifact } = await loadEditorLock()
-const destination = join(repositoryRoot, 'public', 'releases', '0.1.0', 'onlyoffice')
+const destination = join(repositoryRoot, 'public', 'releases', '0.1.1', 'onlyoffice')
+const previousDestination = join(repositoryRoot, 'public', 'releases', '0.1.0', 'onlyoffice')
+await rm(previousDestination, { force: true, recursive: true })
 const markerPath = join(destination, '.dokumi-integrity.json')
 let prepared = false
 try {

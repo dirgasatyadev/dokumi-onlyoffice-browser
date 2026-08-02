@@ -31,6 +31,7 @@ test('keeps ONLYOFFICE branding and strict bridge invariants', async () => {
   assert.match(protocol, /protocolVersion === editorProtocolVersion/u)
   assert.match(x2tClient, /x2t\.wasm\?transport=br1/u)
   assert.match(host, /help:\s*true/u)
+  assert.match(host, /\/releases\/0\.1\.1\/onlyoffice\//u)
 })
 
 test('ships immutable assets and restrictive frame policy', async () => {
@@ -39,8 +40,8 @@ test('ships immutable assets and restrictive frame policy', async () => {
   assert.match(headers, /connect-src 'self' https:\/\/files\.dokumi\.id https:\/\/707c6104ec91159a66da339fcf6a048f\.r2\.cloudflarestorage\.com/u)
   assert.doesNotMatch(headers, /connect-src[^\n]*\*/u)
   assert.match(headers, /\/index\.html\r?\n {2}Content-Security-Policy:[^\r\n]*script-src 'self' 'unsafe-eval' blob:/u)
-  assert.match(headers, /\/releases\/0\.1\.0\/onlyoffice\/\*\r?\n {2}Content-Security-Policy:[^\r\n]*script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:/u)
-  assert.match(headers, /\/releases\/0\.1\.0\/onlyoffice\/\*[^]*connect-src 'self' blob:/u)
+  assert.match(headers, /\/releases\/0\.1\.1\/onlyoffice\/\*\r?\n {2}Content-Security-Policy:[^\r\n]*script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:/u)
+  assert.match(headers, /\/releases\/0\.1\.1\/onlyoffice\/\*[^]*connect-src 'self' blob:/u)
   assert.match(headers, /\/releases\/\*[\s\S]*max-age=31536000, immutable/u)
   assert.match(headers, /Content-Type: application\/wasm/u)
   assert.doesNotMatch(headers, /frame-ancestors[^\n]*\*/u)
