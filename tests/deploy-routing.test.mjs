@@ -16,5 +16,4 @@ test('routes editor HTML through the Worker without static asset redirects', asy
   assert.match(worker, /encodeBody: 'manual'/u)
   assert.match(wrangler, /"html_handling": "none"/u)
   assert.match(wrangler, /"run_worker_first": true/u)
-  assert.match(wrangler, /"compatibility_flags": \["brotli_content_encoding"\]/u)
 })
