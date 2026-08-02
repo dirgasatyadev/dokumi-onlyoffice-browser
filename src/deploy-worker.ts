@@ -11,7 +11,11 @@ const wasmPath = '/releases/0.1.0/x2t/x2t.wasm'
 export default {
   async fetch(request: Request, environment: Environment) {
     const url = new URL(request.url)
-    if (url.pathname === '/editor' || url.pathname === '/editor/') {
+    if (url.pathname === '/editor/') {
+      url.pathname = '/editor'
+      return Response.redirect(url, 308)
+    }
+    if (url.pathname === '/' || url.pathname === '/editor') {
       url.pathname = '/index.html'
       return environment.ASSETS.fetch(new Request(url, request))
     }

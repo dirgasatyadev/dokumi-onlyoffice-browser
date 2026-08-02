@@ -6,9 +6,9 @@
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist",
-    "html_handling": "auto-trailing-slash",
+    "html_handling": "none",
     "not_found_handling": "none",
-    "run_worker_first": ["/releases/0.1.0/x2t/x2t.wasm"]
+    "run_worker_first": true
   },
   "routes": [
     { "pattern": "editor.office.dokumi.id", "custom_domain": true }
