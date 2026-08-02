@@ -16,6 +16,11 @@ The MVP now contains the pinned public editor distribution, local single-partici
 6. versioned static deployment and corresponding-source release pipeline (complete).
 7. direct revision save, token refresh support, conflict preservation, and 20-document golden-corpus gate (complete).
 
+The shadow-rollout runtime is deployed at `https://editor.office.dokumi.id` so
+`https://office.dokumi.id` can continue serving the legacy Document Server for
+non-cohort creators and one-configuration rollback. Do not move the runtime onto
+the legacy origin until the browser editor has completed its stability window.
+
 ## Licensing and attribution
 
 The code in this repository is distributed under GNU AGPL v3.0 with the applicable ONLYOFFICE Section 7 additional terms included in [LICENSE](LICENSE). Some upstream non-code content may be licensed under CC BY-SA 4.0. See [NOTICE.md](NOTICE.md), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), and [SOURCE_OFFER.md](SOURCE_OFFER.md).
