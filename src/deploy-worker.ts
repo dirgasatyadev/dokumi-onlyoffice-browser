@@ -11,10 +11,14 @@ const wasmPath = '/releases/0.1.0/x2t/x2t.wasm'
 export default {
   async fetch(request: Request, environment: Environment) {
     const url = new URL(request.url)
+    if (url.pathname === '/editor' || url.pathname === '/editor/') {
+      url.pathname = '/index.html'
+      return environment.ASSETS.fetch(new Request(url, request))
+    }
     if (url.pathname !== wasmPath) return environment.ASSETS.fetch(request)
     url.pathname = `${wasmPath}.br`
     const compressed = await environment.ASSETS.fetch(new Request(url, request))
-    if (!compressed.ok || !compressed.body) return new Response('Pinned x2t WASM asset is unavailable', { status: 503 })
+    if (!compressed.ok) return new Response('Pinned x2t WASM asset is unavailable', { status: 503 })
     const headers = new Headers(compressed.headers)
     headers.set('Cache-Control', 'public, max-age=31536000, immutable')
     headers.set('Content-Encoding', 'br')
@@ -22,6 +26,6 @@ export default {
     headers.set('Cross-Origin-Resource-Policy', 'same-site')
     headers.set('Vary', 'Accept-Encoding')
     headers.set('X-Content-Type-Options', 'nosniff')
-    return new Response(compressed.body, { headers, status: compressed.status })
+    return new Response(request.method === 'HEAD' ? null : compressed.body, { headers, status: compressed.status })
   },
 }
