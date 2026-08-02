@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2024", "DOM", "DOM.Iterable", "WebWorker"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["vite/client", "node", "@playwright/test"]
+  },
+  "include": ["src/**/*.ts", "tests/browser/**/*.ts", "vite.config.ts", "playwright.config.ts"]
+}

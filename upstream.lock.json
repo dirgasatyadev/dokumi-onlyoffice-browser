@@ -1,0 +1,40 @@
+{
+  "$schema": "./contracts/upstream-lock.schema.json",
+  "lockVersion": 1,
+  "sources": [
+    {
+      "name": "onlyoffice-sdkjs",
+      "repository": "https://github.com/ONLYOFFICE/sdkjs.git",
+      "commit": "72b0421c0bbf9d01eed9cf14834ae47eb2df1b50",
+      "archiveUrl": "https://codeload.github.com/ONLYOFFICE/sdkjs/tar.gz/72b0421c0bbf9d01eed9cf14834ae47eb2df1b50",
+      "archiveFile": "onlyoffice-sdkjs-72b0421c0bbf9d01eed9cf14834ae47eb2df1b50.tar.gz",
+      "archiveBytes": 45053653,
+      "sha256": "4d1a0fe0658d63f9b37f61c550848c6052dbe72494e8cd406b2805dc5f958144",
+      "licensePath": "LICENSE",
+      "thirdPartyNoticePath": "3DPARTY.md"
+    },
+    {
+      "name": "onlyoffice-web-apps",
+      "repository": "https://github.com/ONLYOFFICE/web-apps.git",
+      "commit": "9c0ca538c3b211052347df09d2a4d6781f023403",
+      "archiveUrl": "https://codeload.github.com/ONLYOFFICE/web-apps/tar.gz/9c0ca538c3b211052347df09d2a4d6781f023403",
+      "archiveFile": "onlyoffice-web-apps-9c0ca538c3b211052347df09d2a4d6781f023403.tar.gz",
+      "archiveBytes": 529371517,
+      "sha256": "2e3fe67096e54140612ed4b2458c83d993f2b8787a87bc3456c9feb34bfff7c4",
+      "licensePath": "LICENSE",
+      "thirdPartyNoticePath": "3DPARTY.md"
+    },
+    {
+      "name": "onlyoffice-x2t-wasm",
+      "repository": "https://github.com/dirgasatyadev/onlyoffice-x2t-wasm.git",
+      "parentRepository": "https://github.com/cryptpad/onlyoffice-x2t-wasm.git",
+      "commit": "96886ff143e05471144c4426fb304b4d794370d2",
+      "archiveUrl": "https://codeload.github.com/dirgasatyadev/onlyoffice-x2t-wasm/tar.gz/96886ff143e05471144c4426fb304b4d794370d2",
+      "archiveFile": "onlyoffice-x2t-wasm-96886ff143e05471144c4426fb304b4d794370d2.tar.gz",
+      "archiveBytes": 273304042,
+      "sha256": "0d3d67743e8fc62deea92ff299d13c720e454f11cd31b3f5d3a78916a617b9e2",
+      "licensePath": "core/LICENSE",
+      "thirdPartyNoticePath": "core/3DPARTY.md"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://office.dokumi.id/contracts/upstream-lock.schema.json",
+  "title": "Dokumi ONLYOFFICE upstream lock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lockVersion", "sources"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "lockVersion": { "const": 1 },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "repository", "commit", "archiveUrl", "archiveFile", "archiveBytes", "sha256", "licensePath", "thirdPartyNoticePath"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "repository": { "type": "string", "format": "uri", "pattern": "^https://github\\.com/" },
+          "parentRepository": { "type": "string", "format": "uri", "pattern": "^https://github\\.com/" },
+          "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+          "archiveUrl": { "type": "string", "format": "uri", "pattern": "^https://codeload\\.github\\.com/" },
+          "archiveFile": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]+\\.tar\\.gz$" },
+          "archiveBytes": { "type": "integer", "minimum": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "licensePath": { "type": "string", "minLength": 1 },
+          "thirdPartyNoticePath": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}
