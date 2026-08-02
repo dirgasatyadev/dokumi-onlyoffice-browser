@@ -35,7 +35,7 @@ test('keeps ONLYOFFICE branding and strict bridge invariants', async () => {
 
 test('ships immutable assets and restrictive frame policy', async () => {
   const [headers, worker, wrangler] = await Promise.all([read('public/_headers'), read('src/deploy-worker.ts'), read('wrangler.jsonc')])
-  assert.match(headers, /frame-ancestors https:\/\/creator\.dokumi\.id https:\/\/app\.dokumi\.id/u)
+  assert.match(headers, /frame-ancestors 'self' https:\/\/creator\.dokumi\.id https:\/\/app\.dokumi\.id/u)
   assert.match(headers, /connect-src 'self' https:\/\/files\.dokumi\.id https:\/\/707c6104ec91159a66da339fcf6a048f\.r2\.cloudflarestorage\.com/u)
   assert.doesNotMatch(headers, /connect-src[^\n]*\*/u)
   assert.match(headers, /\/releases\/\*[\s\S]*max-age=31536000, immutable/u)
