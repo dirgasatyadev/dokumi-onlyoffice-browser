@@ -38,6 +38,8 @@ test('ships immutable assets and restrictive frame policy', async () => {
   assert.match(headers, /frame-ancestors 'self' https:\/\/creator\.dokumi\.id https:\/\/app\.dokumi\.id/u)
   assert.match(headers, /connect-src 'self' https:\/\/files\.dokumi\.id https:\/\/707c6104ec91159a66da339fcf6a048f\.r2\.cloudflarestorage\.com/u)
   assert.doesNotMatch(headers, /connect-src[^\n]*\*/u)
+  assert.match(headers, /\/index\.html\n {2}Content-Security-Policy:[^\n]*script-src 'self' 'unsafe-eval' blob:/u)
+  assert.match(headers, /\/releases\/0\.1\.0\/onlyoffice\/\*\n {2}Content-Security-Policy:[^\n]*script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:/u)
   assert.match(headers, /\/releases\/\*[\s\S]*max-age=31536000, immutable/u)
   assert.match(headers, /Content-Type: application\/wasm/u)
   assert.doesNotMatch(headers, /frame-ancestors[^\n]*\*/u)
