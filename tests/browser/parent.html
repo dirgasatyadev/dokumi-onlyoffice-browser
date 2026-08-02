@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dokumi parent bridge harness</title>
+    <style>
+      html, body { height: 100%; margin: 0; }
+      body { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+      #runtime { width: 100%; height: 100%; border: 0; }
+    </style>
+  </head>
+  <body>
+    <output id="state">booting</output>
+    <iframe id="runtime" title="Dokumi editor runtime"></iframe>
+    <script type="module" src="/tests/browser/parent-harness.ts"></script>
+  </body>
+</html>

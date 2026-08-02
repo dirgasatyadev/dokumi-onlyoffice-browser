@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://office.dokumi.id/contracts/editor-bridge.schema.json",
+  "title": "Dokumi editor postMessage protocol v1",
+  "oneOf": [
+    { "$ref": "#/$defs/init" },
+    { "$ref": "#/$defs/refresh" },
+    { "$ref": "#/$defs/saveNow" },
+    { "$ref": "#/$defs/close" },
+    { "$ref": "#/$defs/download" },
+    { "$ref": "#/$defs/ready" },
+    { "$ref": "#/$defs/loading" },
+    { "$ref": "#/$defs/opened" },
+    { "$ref": "#/$defs/dirty" },
+    { "$ref": "#/$defs/saving" },
+    { "$ref": "#/$defs/saved" },
+    { "$ref": "#/$defs/conflict" },
+    { "$ref": "#/$defs/error" },
+    { "$ref": "#/$defs/closeAllowed" }
+  ],
+  "$defs": {
+    "uuid": { "type": "string", "format": "uuid" },
+    "sha256Base64": { "type": "string", "pattern": "^[A-Za-z0-9+/]{43}=$" },
+    "empty": { "type": "object", "additionalProperties": false },
+    "envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["payload", "protocolVersion", "requestId", "sessionId", "type"],
+      "properties": {
+        "payload": { "type": "object" },
+        "protocolVersion": { "const": 1 },
+        "requestId": { "$ref": "#/$defs/uuid" },
+        "sessionId": { "$ref": "#/$defs/uuid" },
+        "type": { "type": "string" }
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checksumSha256", "contentLength", "contentType", "downloadUrl", "fileId", "fileName", "sourceRevision"],
+      "properties": {
+        "checksumSha256": { "$ref": "#/$defs/sha256Base64" },
+        "contentLength": { "type": "integer", "minimum": 1, "maximum": 52428800 },
+        "contentType": { "const": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+        "downloadUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "fileId": { "$ref": "#/$defs/uuid" },
+        "fileName": { "type": "string", "pattern": "(?i)\\.docx$" },
+        "sourceRevision": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document", "editorOrigin", "editorUrl", "expiresAt", "sessionId", "token"],
+      "properties": {
+        "document": { "$ref": "#/$defs/document" },
+        "editorOrigin": { "type": "string", "format": "uri" },
+        "editorUrl": { "type": "string", "format": "uri" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "sessionId": { "$ref": "#/$defs/uuid" },
+        "token": { "type": "string", "minLength": 1 }
+      }
+    },
+    "init": {
+      "allOf": [
+        { "$ref": "#/$defs/envelope" },
+        { "properties": { "type": { "const": "DOKUMI_EDITOR_INIT" }, "payload": {
+          "type": "object", "additionalProperties": false,
+          "required": ["manifest", "templateId", "userId"],
+          "properties": { "manifest": { "$ref": "#/$defs/manifest" }, "templateId": { "$ref": "#/$defs/uuid" }, "userId": { "$ref": "#/$defs/uuid" } }
+        } } }
+      ]
+    },
+    "refresh": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_REFRESH_TOKEN" }, "payload": { "type": "object", "additionalProperties": false, "required": ["expiresAt", "token"], "properties": { "expiresAt": { "type": "string", "format": "date-time" }, "token": { "type": "string", "minLength": 1 } } } } }] },
+    "saveNow": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_SAVE_NOW" }, "payload": { "$ref": "#/$defs/empty" } } }] },
+    "close": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_CLOSE" }, "payload": { "type": "object", "additionalProperties": false, "properties": { "force": { "type": "boolean" } } } } }] },
+    "download": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_DOWNLOAD_LOCAL" }, "payload": { "$ref": "#/$defs/empty" } } }] },
+    "ready": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_READY" }, "payload": { "type": "object", "additionalProperties": false, "required": ["engineVersion", "sourceUrl"], "properties": { "engineVersion": { "type": "string" }, "sourceUrl": { "type": "string", "format": "uri" } } } } }] },
+    "loading": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_LOADING" }, "payload": { "type": "object", "additionalProperties": false, "required": ["stage"], "properties": { "stage": { "enum": ["recovery", "download", "convert", "editor"] } } } } }] },
+    "opened": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_OPENED" }, "payload": { "type": "object", "additionalProperties": false, "required": ["baseRevision", "recovered"], "properties": { "baseRevision": { "type": "integer", "minimum": 0 }, "recovered": { "type": "boolean" } } } } }] },
+    "dirty": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_DIRTY" }, "payload": { "$ref": "#/$defs/empty" } } }] },
+    "saving": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_SAVING" }, "payload": { "type": "object", "additionalProperties": false, "required": ["local"], "properties": { "local": { "type": "boolean" } } } } }] },
+    "saved": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_SAVED" }, "payload": { "type": "object", "additionalProperties": false, "required": ["checksumSha256", "sourceRevision"], "properties": { "checksumSha256": { "$ref": "#/$defs/sha256Base64" }, "sourceRevision": { "type": "integer", "minimum": 0 } } } } }] },
+    "conflict": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_CONFLICT" }, "payload": { "type": "object", "additionalProperties": false, "required": ["actualRevision", "expectedRevision"], "properties": { "actualRevision": { "type": "integer", "minimum": 0 }, "expectedRevision": { "type": "integer", "minimum": 0 } } } } }] },
+    "error": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_ERROR" }, "payload": { "type": "object", "additionalProperties": false, "required": ["code", "message", "recoverable"], "properties": { "code": { "type": "string" }, "message": { "type": "string" }, "recoverable": { "type": "boolean" } } } } }] },
+    "closeAllowed": { "allOf": [{ "$ref": "#/$defs/envelope" }, { "properties": { "type": { "const": "DOKUMI_EDITOR_CLOSE_ALLOWED" }, "payload": { "type": "object", "additionalProperties": false, "required": ["dirty"], "properties": { "dirty": { "type": "boolean" } } } } }] }
+  }
+}

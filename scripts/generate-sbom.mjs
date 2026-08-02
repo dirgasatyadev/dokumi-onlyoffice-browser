@@ -3,9 +3,11 @@ import { join } from 'node:path'
 import { repositoryRoot } from './upstream.mjs'
 import { verifyLock } from './verify-lock.mjs'
 import { validateArtifactsLock } from './verify-artifacts.mjs'
+import { validateEditorLock } from './verify-editor.mjs'
 
 const lock = await verifyLock()
 const artifactLock = await validateArtifactsLock()
+const editorLock = await validateEditorLock()
 const packageJson = JSON.parse(await readFile(join(repositoryRoot, 'package.json'), 'utf8'))
 const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies }
 const outputDirectory = join(repositoryRoot, 'dist')
@@ -40,6 +42,18 @@ const components = [
       { type: 'distribution', url: artifact.downloadUrl },
     ],
   })),
+  {
+    type: 'file',
+    name: editorLock.artifact.name,
+    version: editorLock.artifact.releaseTag,
+    hashes: [{ alg: 'SHA-256', content: editorLock.artifact.sha256 }],
+    licenses: [{ license: { id: 'AGPL-3.0-only' } }],
+    externalReferences: [
+      { type: 'vcs', url: `${editorLock.artifact.sourceRepository}#${editorLock.artifact.sourceCommit}` },
+      { type: 'distribution', url: editorLock.artifact.downloadUrl },
+      { type: 'distribution', url: editorLock.artifact.sourceArchiveUrl },
+    ],
+  },
 ]
 
 const sbom = {

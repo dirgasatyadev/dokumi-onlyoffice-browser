@@ -6,14 +6,15 @@ Public browser runtime for editing Dokumi template DOCX files with unmodified ON
 
 ## Status
 
-The repository now contains the verified x2t Web Worker and DOCX/`Editor.bin` round-trip runtime. The full SDKJS editor shell is the next implementation stage. The sequence is:
+The MVP now contains the pinned public editor distribution, local single-participant DocService adapter, strict parent/iframe bridge, IndexedDB recovery, browser-side DOCX export, and optimistic revision upload through a narrow editor token. A save is acknowledged only after create-session, direct object upload, and atomic revision completion succeed. It does not require ONLYOFFICE Document Server for an editing session.
 
 1. reproducible upstream fetch and verification;
 2. x2t WASM DOCX/`Editor.bin` round-trip (complete);
-3. local DocService adapter;
-4. IndexedDB recovery;
-5. strict parent/iframe bridge;
-6. static deployment and release source package.
+3. local DocService adapter (complete);
+4. IndexedDB recovery (complete);
+5. strict parent/iframe bridge (complete);
+6. versioned static deployment and corresponding-source release pipeline (complete).
+7. direct revision save, token refresh support, conflict preservation, and 20-document golden-corpus gate (complete).
 
 ## Licensing and attribution
 
@@ -42,6 +43,14 @@ The browser build also fetches the pinned x2t release artifact and verifies the 
 pnpm fetch:x2t
 pnpm verify:artifacts
 pnpm build
+```
+
+The editor ZIP and its exact corresponding-source archive are independently pinned in `editor.lock.json`:
+
+```bash
+pnpm fetch:editor
+pnpm fetch:editor-source
+pnpm verify:editor
 ```
 
 The complete source package is intentionally large because it contains the exact upstream source archives:

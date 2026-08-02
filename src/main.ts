@@ -1,5 +1,19 @@
 import './styles.css'
 import { X2tClient } from './wasm/x2t-client'
+import { EditorRuntime } from './runtime/editor-runtime'
+
+const route = new URL(location.href)
+if (route.pathname === '/editor') {
+  const sessionId = route.searchParams.get('sessionId')
+  const parentOrigin = route.searchParams.get('parentOrigin')
+  const container = document.querySelector<HTMLElement>('main')
+  if (!sessionId || !parentOrigin || !container) throw new Error('Editor route requires sessionId and parentOrigin')
+  document.body.classList.add('editor-route')
+  container.replaceChildren()
+  const runtime = new EditorRuntime({ container, parentOrigin, sessionId })
+  runtime.start()
+  window.addEventListener('pagehide', () => void runtime.close(), { once: true })
+}
 
 const input = document.querySelector<HTMLInputElement>('#document')
 const status = document.querySelector<HTMLOutputElement>('#status')
@@ -15,7 +29,7 @@ function setStatus(message: string, state: 'ready' | 'working' | 'error' = 'read
   status.dataset.state = state
 }
 
-input?.addEventListener('change', async () => {
+if (route.pathname !== '/editor') input?.addEventListener('change', async () => {
   const file = input.files?.[0]
   if (!file) return
   setStatus('Mengonversi DOCX ke Editor.bin…', 'working')

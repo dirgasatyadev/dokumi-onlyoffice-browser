@@ -47,3 +47,27 @@ input {
 
 output[data-state='working'] { color: #fde68a; }
 output[data-state='error'] { color: #fca5a5; }
+
+.editor-route,
+.editor-route main {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.editor-route main {
+  margin: 0;
+}
+
+.dokumi-source-link {
+  position: fixed;
+  z-index: 1000;
+  right: 0.5rem;
+  bottom: 0.25rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  color: #475569;
+  background: rgb(255 255 255 / 88%);
+  font-size: 0.65rem;
+  text-decoration: none;
+}

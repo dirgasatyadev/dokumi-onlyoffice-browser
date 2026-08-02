@@ -1,0 +1,25 @@
+{
+  "$schema": "./contracts/editor-lock.schema.json",
+  "lockVersion": 1,
+  "artifact": {
+    "name": "cryptpad-onlyoffice-editor-v9.3.0.140",
+    "sourceRepository": "https://github.com/cryptpad/onlyoffice-editor.git",
+    "sourceCommit": "fc09b218064061b6deaea206c068b34e5a20bd39",
+    "sourceArchiveUrl": "https://codeload.github.com/cryptpad/onlyoffice-editor/tar.gz/fc09b218064061b6deaea206c068b34e5a20bd39",
+    "sourceArchiveFile": "onlyoffice-editor-fc09b218064061b6deaea206c068b34e5a20bd39.tar.gz",
+    "sourceArchiveBytes": 555089292,
+    "sourceArchiveSha256": "db7062db3f3ff824206e4a66b9fadc016dd5160ced826a577ea8f130a5d9f678",
+    "releaseTag": "v9.3.0.140+0",
+    "downloadUrl": "https://github.com/cryptpad/onlyoffice-editor/releases/download/v9.3.0.140%2B0/onlyoffice-editor.zip",
+    "archiveFile": "onlyoffice-editor-v9.3.0.140+0.zip",
+    "archiveBytes": 586520730,
+    "sha256": "26eae4278d236d4cd5f1730074d148bd0a0e3d3e9bc390b7c33d27fe3e4f299e",
+    "sha512": "f65b1d474188756dfb7647c8d4f2ce2f86bf95334e9c3a5a546e63df51e2e77e737f9898b8086866971c364e9fe489c9f07e6572d8961ed398e4bf996bb6c58a",
+    "criticalFiles": [
+      { "path": "web-apps/apps/api/documents/api.js", "bytes": 7143, "sha256": "6d933ee06cd309e69844e92641880111e45a461db9cf5860756abebf4ff5fb69" },
+      { "path": "web-apps/apps/api/documents/api-orig.js", "bytes": 62671, "sha256": "f085994000e14e845e5015b31dce7d8a80ffc29cb4888098a8939387dff9b1d1" },
+      { "path": "web-apps/apps/documenteditor/main/index.html", "bytes": 123677, "sha256": "ac6b51d2fdcfea54721f9de16df7f899b254f27d416a508956b058485823fedd" },
+      { "path": "sdkjs/word/sdk-all-min.js", "bytes": 2594225, "sha256": "3c9c47d6f1dabf9a07984768b7c1417644728875ad1409b4996ea5a0213d846a" }
+    ]
+  }
+}
