@@ -5,11 +5,11 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 
 /index.html
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' https://files.dokumi.id https://707c6104ec91159a66da339fcf6a048f.r2.cloudflarestorage.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self' https://creator.dokumi.id https://app.dokumi.id; object-src 'none'; base-uri 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' https://api.dokumi.id https://files.dokumi.id https://707c6104ec91159a66da339fcf6a048f.r2.cloudflarestorage.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self' https://creator.dokumi.id https://app.dokumi.id; object-src 'none'; base-uri 'none'; form-action 'none'
   Cache-Control: no-cache, no-store, must-revalidate
 
 /editor
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' https://files.dokumi.id https://707c6104ec91159a66da339fcf6a048f.r2.cloudflarestorage.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self' https://creator.dokumi.id https://app.dokumi.id; object-src 'none'; base-uri 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'self' https://api.dokumi.id https://files.dokumi.id https://707c6104ec91159a66da339fcf6a048f.r2.cloudflarestorage.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self' https://creator.dokumi.id https://app.dokumi.id; object-src 'none'; base-uri 'none'; form-action 'none'
   Cache-Control: no-cache, no-store, must-revalidate
 
 /releases/0.1.1/onlyoffice/*
