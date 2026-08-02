@@ -16,11 +16,12 @@ test('pins matching editor distribution and corresponding source', async () => {
 })
 
 test('keeps ONLYOFFICE branding and strict bridge invariants', async () => {
-  const [host, parentChannel, runtimeChannel, protocol] = await Promise.all([
+  const [host, parentChannel, runtimeChannel, protocol, x2tClient] = await Promise.all([
     read('src/runtime/editor-host.ts'),
     read('src/bridge/parent-channel.ts'),
     read('src/bridge/runtime-channel.ts'),
     read('src/bridge/protocol.ts'),
+    read('src/wasm/x2t-client.ts'),
   ])
   const combined = `${host}\n${parentChannel}\n${runtimeChannel}\n${protocol}`
   assert.doesNotMatch(combined, /branding\s*:\s*false/iu)
@@ -28,6 +29,7 @@ test('keeps ONLYOFFICE branding and strict bridge invariants', async () => {
   assert.match(parentChannel, /event\.source\s*!==\s*this\.#iframeWindow/u)
   assert.match(runtimeChannel, /event\.source\s*!==\s*this\.#parentWindow/u)
   assert.match(protocol, /protocolVersion === editorProtocolVersion/u)
+  assert.match(x2tClient, /x2t\.wasm\?transport=br1/u)
   assert.match(host, /help:\s*true/u)
 })
 
