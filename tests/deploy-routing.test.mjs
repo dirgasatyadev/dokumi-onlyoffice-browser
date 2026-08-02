@@ -6,11 +6,13 @@ import test from 'node:test'
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8')
 
 test('routes editor HTML through the Worker without static asset redirects', async () => {
-  const [worker, wrangler] = await Promise.all([
+  const [html, worker, wrangler] = await Promise.all([
+    read('index.html'),
     read('src/deploy-worker.ts'),
     read('wrangler.jsonc'),
   ])
   assert.match(worker, /url\.pathname === '\/' \|\| url\.pathname === '\/editor'/u)
+  assert.match(html, /dokumi-runtime-transport" content="shell-csp-api-v1"/u)
   assert.match(worker, /url\.pathname = '\/index\.html'/u)
   assert.match(worker, /url\.pathname = `\$\{wasmPath\}\.bin`/u)
   assert.match(worker, /encodeBody: 'manual'/u)
