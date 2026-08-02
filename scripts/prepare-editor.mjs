@@ -36,4 +36,10 @@ await cp(
   join(destination, 'sdkjs', 'common', 'serviceworker', 'document_editor_service_worker.js'),
   join(destination, 'document_editor_service_worker.js'),
 )
+// Web Apps resolves its shared theme catalog from the distribution root.
+// The pinned standalone artifact keeps the canonical file under apps/common.
+await cp(
+  join(destination, 'web-apps', 'apps', 'common', 'main', 'resources', 'themes', 'themes.json'),
+  join(destination, 'themes.json'),
+)
 console.log('Prepared versioned ONLYOFFICE editor assets.')
