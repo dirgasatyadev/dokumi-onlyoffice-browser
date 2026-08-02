@@ -11,6 +11,6 @@
     "run_worker_first": ["/releases/0.1.0/x2t/x2t.wasm"]
   },
   "routes": [
-    { "pattern": "office.dokumi.id", "custom_domain": true }
+    { "pattern": "editor.office.dokumi.id", "custom_domain": true }
   ]
 }
