@@ -26,7 +26,9 @@ for (const file of artifact.files) {
   await copyFile(join(artifactExtractDirectory(artifact), file.path), join(publicDirectory, file.path))
 }
 const wasmPath = join(publicDirectory, 'x2t.wasm')
-const brotliPath = `${wasmPath}.br`
+// Use a neutral extension so Cloudflare Static Assets treats the checked-in
+// Brotli stream as opaque bytes instead of applying a second compression layer.
+const brotliPath = `${wasmPath}.bin`
 let compressed = false
 try {
   compressed = (await stat(brotliPath)).size > 0
