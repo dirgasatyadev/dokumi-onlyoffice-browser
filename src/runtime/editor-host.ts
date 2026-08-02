@@ -46,7 +46,7 @@ export class EditorHost extends EventTarget {
 
   async open() {
     if (this.#editor) throw new Error('Editor is already open')
-    const apiUrl = this.#options.apiUrl ?? '/releases/0.1.0/onlyoffice/web-apps/apps/api/documents/api.js'
+    const apiUrl = this.#options.apiUrl ?? '/releases/0.1.1/onlyoffice/web-apps/apps/api/documents/api.js'
     await loadEditorApi(apiUrl)
     // The public local-runtime wrapper deliberately delegates media lookup to
     // this host object. The stock Document Server normally creates it.
