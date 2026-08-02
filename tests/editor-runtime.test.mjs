@@ -35,7 +35,9 @@ test('keeps ONLYOFFICE branding and strict bridge invariants', async () => {
 })
 
 test('ships immutable assets and restrictive frame policy', async () => {
-  const [headers, worker, wrangler] = await Promise.all([read('public/_headers'), read('src/deploy-worker.ts'), read('wrangler.jsonc')])
+  const [headers, prepareEditor, worker, wrangler] = await Promise.all([
+    read('public/_headers'), read('scripts/prepare-editor.mjs'), read('src/deploy-worker.ts'), read('wrangler.jsonc'),
+  ])
   assert.match(headers, /frame-ancestors 'self' https:\/\/creator\.dokumi\.id https:\/\/app\.dokumi\.id/u)
   assert.match(headers, /connect-src 'self' https:\/\/api\.dokumi\.id https:\/\/files\.dokumi\.id https:\/\/707c6104ec91159a66da339fcf6a048f\.r2\.cloudflarestorage\.com/u)
   assert.doesNotMatch(headers, /connect-src[^\n]*\*/u)
@@ -48,4 +50,6 @@ test('ships immutable assets and restrictive frame policy', async () => {
   assert.match(wrangler, /"directory": "\.\/dist"/u)
   assert.match(worker, /Content-Encoding', 'br'/u)
   assert.match(worker, /Content-Type', 'application\/wasm'/u)
+  assert.match(prepareEditor, /'resources', 'themes', 'themes\.json'/u)
+  assert.match(prepareEditor, /join\(destination, 'themes\.json'\)/u)
 })
