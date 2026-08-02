@@ -21,7 +21,11 @@ export default {
     }
     if (url.pathname !== wasmPath) return environment.ASSETS.fetch(request)
     url.pathname = `${wasmPath}.br`
-    const compressed = await environment.ASSETS.fetch(new Request(url, request))
+    const assetHeaders = new Headers(request.headers)
+    // Fetch the checked-in Brotli stream verbatim. Otherwise Static Assets may
+    // Brotli-compress the .br file again when the browser advertises br support.
+    assetHeaders.set('Accept-Encoding', 'identity')
+    const compressed = await environment.ASSETS.fetch(new Request(url, { headers: assetHeaders, method: request.method }))
     if (!compressed.ok) return new Response('Pinned x2t WASM asset is unavailable', { status: 503 })
     const headers = new Headers(compressed.headers)
     headers.set('Cache-Control', 'public, max-age=31536000, immutable')

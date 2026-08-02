@@ -12,6 +12,7 @@ test('routes editor HTML through the Worker without static asset redirects', asy
   ])
   assert.match(worker, /url\.pathname === '\/' \|\| url\.pathname === '\/editor'/u)
   assert.match(worker, /url\.pathname = '\/index\.html'/u)
+  assert.match(worker, /assetHeaders\.set\('Accept-Encoding', 'identity'\)/u)
   assert.match(wrangler, /"html_handling": "none"/u)
   assert.match(wrangler, /"run_worker_first": true/u)
 })
