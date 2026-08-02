@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "dokumi-onlyoffice-browser",
   "compatibility_date": "2026-07-31",
+  "compatibility_flags": ["brotli_content_encoding"],
   "main": "src/deploy-worker.ts",
   "assets": {
     "binding": "ASSETS",

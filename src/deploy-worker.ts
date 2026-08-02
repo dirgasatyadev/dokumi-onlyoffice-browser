@@ -6,6 +6,10 @@ interface Environment {
   ASSETS: AssetsBinding
 }
 
+interface WorkerResponseInit extends ResponseInit {
+  encodeBody: 'manual'
+}
+
 const wasmPath = '/releases/0.1.0/x2t/x2t.wasm'
 
 export default {
@@ -32,6 +36,7 @@ export default {
     headers.set('Cross-Origin-Resource-Policy', 'same-site')
     headers.set('Vary', 'Accept-Encoding')
     headers.set('X-Content-Type-Options', 'nosniff')
-    return new Response(request.method === 'HEAD' ? null : compressed.body, { headers, status: compressed.status })
+    const responseInit: WorkerResponseInit = { encodeBody: 'manual', headers, status: compressed.status }
+    return new Response(request.method === 'HEAD' ? null : compressed.body, responseInit)
   },
 }
