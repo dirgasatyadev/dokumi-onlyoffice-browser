@@ -52,7 +52,9 @@ export class X2tClient {
 
   constructor(options: X2tClientOptions = {}) {
     this.#jsUrl = options.jsUrl ?? '/releases/0.1.0/x2t/x2t.js'
-    this.#wasmUrl = options.wasmUrl ?? '/releases/0.1.0/x2t/x2t.wasm'
+    // The transport revision is part of the immutable browser cache key. Bump
+    // it whenever response encoding changes without changing pinned x2t bytes.
+    this.#wasmUrl = options.wasmUrl ?? '/releases/0.1.0/x2t/x2t.wasm?transport=br1'
     this.#timeoutMs = options.timeoutMs ?? 120_000
     this.#worker = options.workerFactory?.() ?? new Worker(new URL('./x2t.worker.ts', import.meta.url))
     this.#worker.onmessage = ({ data }: MessageEvent<X2tWorkerResponse>) => this.#receive(data)
