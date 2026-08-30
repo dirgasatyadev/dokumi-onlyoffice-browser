@@ -16,10 +16,7 @@ The MVP now contains the pinned public editor distribution, local single-partici
 6. versioned static deployment and corresponding-source release pipeline (complete).
 7. direct revision save, token refresh support, conflict preservation, and 20-document golden-corpus gate (complete).
 
-The shadow-rollout runtime is deployed at `https://editor.office.dokumi.id` so
-`https://office.dokumi.id` can continue serving the legacy Document Server for
-non-cohort creators and one-configuration rollback. Do not move the runtime onto
-the legacy origin until the browser editor has completed its stability window.
+The production runtime is deployed at `https://editor.office.dokumi.id` and is the default editor for all creators. The stability window and two-release gate completed on 2026-08-02. The legacy Document Server at `https://office.dokumi.id` is stopped and is not a runtime dependency.
 
 ## Licensing and attribution
 
