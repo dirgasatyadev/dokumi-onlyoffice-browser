@@ -1,3 +1,4 @@
+# Disabled by request on 2026-08-29. Rename back to .yml to re-enable.
 name: Release
 
 on:
